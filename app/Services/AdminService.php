@@ -5,6 +5,7 @@ use App\Models\Seat;
 use App\Services;
 use Illuminate\Contracts\Pagination\Paginator;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class AdminService{
@@ -74,14 +75,14 @@ class AdminService{
         }
     }
 
-    public function getMovie(Request $request){
+    public function getMovie(Request $request):JsonResponse{
         $query = $request->input('query');
         $movies = Movie::where('title', 'LIKE', "%{$query}%")->orWhere('showtime','LIKE',"%{$query}%")->orWhere('cast','LIKE',"%{$query}%")->get(['title','id']);
 
         return response()->json($movies);
     }
 
-    public function getPageNumber(Movie $movie){
+    public function getPageNumber(Movie $movie):JsonResponse{
         if(!$movie){
             return response()->json(['error'=>'movie not found'],404);
         }

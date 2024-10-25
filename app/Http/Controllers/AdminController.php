@@ -98,11 +98,11 @@ class AdminController extends Controller
             return response()->json(['status' => 'error', 'message' => 'Movie not found or could not be deleted.'], 404);
         }
     }
-    public function suggest(Request $request){
+    public function suggest(Request $request):JsonResponse{
         $movies=$this->AdminService->getMovie($request);
         return $movies;
     }
-    public function getMoviePage(Request $request, int $id){
+    public function getMoviePage(Request $request, int $id):JsonResponse{
         $movie=Movie::find($id);
         $response=$this->AdminService->getPageNumber($movie);
         return $response;
