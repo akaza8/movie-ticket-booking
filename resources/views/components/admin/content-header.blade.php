@@ -6,9 +6,8 @@
             </div>
             <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-right">
-                    <li class="breadcrumb-item @yield('status3')"><a
-                            href="{{ route('movies.index') }}">Home</a></li>
-                    <li class="breadcrumb-item">@yield('bread')</li>
+                    <li class="breadcrumb-item @yield('status3')">movies</li>
+                    <li class="breadcrumb-item @yield('status4')">create</li>
                 </ol>
             </div>
         </div>

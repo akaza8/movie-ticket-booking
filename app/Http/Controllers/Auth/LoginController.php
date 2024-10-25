@@ -40,10 +40,9 @@ class LoginController extends Controller
     }
 
     protected function authenticated($request,$user):RedirectResponse{
-        // if($user->role==='admin'){
-        //     return redirect()->route('movies.index');
-        // }
-        // return redirect()->route('user.dashboard');
+        if($request->session()->has('url.intended')){
+            return redirect()->to($request->session()->get('url.intended'));
+        }
         return $user->role==='admin'?redirect()->route('movies.index'):redirect()->route('user.dashboard');
     }
 }

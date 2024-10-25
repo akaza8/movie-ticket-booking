@@ -17,6 +17,8 @@ class UserAccess
     public function handle(Request $request, Closure $next, $userType): Response
     {
         if(!Auth::check()){
+            // added line to store intended url
+            $request->session()->put('url.intended',$request->url());
             return redirect()->route('login');
         }
         $user = Auth::user()->role;

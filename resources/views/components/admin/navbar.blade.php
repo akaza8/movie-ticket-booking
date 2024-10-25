@@ -6,10 +6,10 @@
                     class="fas fa-bars"></i></a>
         </li>
         <li class="nav-item d-none d-sm-inline-block">
-            <a href="{{ route('movies.index') }}" class="nav-link">Home</a>
+            <a href="{{ route('movies.index') }}" class="nav-link">Movies</a>
         </li>
         <li class="nav-item d-none d-sm-inline-block">
-            <a href="{{ route('movies.create') }}" class="nav-link">Add Movie</a>
+            <a href="{{ route('movies.create') }}" class="nav-link">Create</a>
         </li>
     </ul>
 

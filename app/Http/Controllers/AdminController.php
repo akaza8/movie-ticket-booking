@@ -7,6 +7,7 @@ use App\Services\AdminService;
 use App\Http\Requests\MovieStoreRequest;
 use App\Http\Requests\UpdateMovieRequest;
 use App\Models\Movie;
+use App\Models\Seat;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
@@ -40,8 +41,10 @@ class AdminController extends Controller
     {
         $data = $request->validated();
         $imageName=time().'.'.$request->image->extension();
-        Movie::create(array_merge($data,['image_url'=>'assets/images/'.$imageName]));
+        $movie=Movie::create(array_merge($data,['image_url'=>'assets/images/'.$imageName]));
         $request->image->move(public_path('assets/images'), $imageName);
+        $theatreId=$data['theatre_id'];
+        $this->AdminService->seedSeats($movie->id,$theatreId);
         return redirect()->route('movies.index')->with('success','Movie Created successfully!');
 
     }
@@ -78,18 +81,10 @@ class AdminController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id):JsonResponse
+    public function destroy(Movie $movie):JsonResponse
     {
-        // $movie = Movie::findOrFail($id);
-        // $image_path=$movie->image_url;
-        // if(file_exists($image_path)){
-        //     @unlink($image_path);
-        // }
-        // $movie->delete();
-        // return response()->json(['status' => 'success', 'message' => 'Data deleted successfully']);
-
         try {
-            $movie = Movie::findOrFail($id);
+            // $movie = Movie::findOrFail($id);
             $image_path = $movie->image_url;
 
             if (file_exists($image_path)) {
@@ -97,10 +92,21 @@ class AdminController extends Controller
             }
 
             $movie->delete();
-
+            Seat::where('movie_id',$movie->id)->delete();
             return response()->json(['status' => 'success', 'message' => 'Data deleted successfully']);
         } catch (\Exception $e) {
             return response()->json(['status' => 'error', 'message' => 'Movie not found or could not be deleted.'], 404);
         }
     }
+    public function suggest(Request $request){
+        $movies=$this->AdminService->getMovie($request);
+        return $movies;
+    }
+    public function getMoviePage(Request $request, int $id){
+        $movie=Movie::find($id);
+        $response=$this->AdminService->getPageNumber($movie);
+        return $response;
+    }
 }
+
+

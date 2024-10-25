@@ -7,7 +7,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    
+
     @yield('meta')
     <link rel="stylesheet" href="{{ asset('assets/styles/welcome.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/styles/user.css') }}">
@@ -30,7 +30,9 @@
 
 <body>
     <div class="navbar">
-        <h1 class="logo ms-2">flakes</h1>
+        <h1 class="logo ms-2">
+            <a href="{{ route('dash') }}" class="text-decoration-none text-success">flakes</a>
+        </h1>
         <div class="profile-container">
             @if (Auth::check())
                 <span class="profile-text ">{{ Auth::user()->name }}</span>

@@ -75,8 +75,9 @@
             const seatPrice = {{ $data[0]->price }};
             let selectedSeats = [];
             let totalPrice = 0;
+            let isBookingConfirmed=false;
             $('.seat').on('click', function() {
-                if (!$(this).hasClass('1')) {
+                if (!$(this).hasClass('1') && !isBookingConfirmed) {
                     $(this).toggleClass('selected');
                     const seatId = $(this).data('seat-id');
 
@@ -94,6 +95,11 @@
             });
 
             $('#confirm-booking').on('click', function() {
+                if(isBookingConfirmed){
+                    $('#ticketModal').modal('show');
+                    alert('Booking already confirmed! please print your ticket. ');
+                    return;
+                }
                 if (selectedSeats.length > 0) {
                     const data = {
                         user_id: {{ Auth::user()->id }},
@@ -102,6 +108,20 @@
                         seats: selectedSeats,
                     };
                     const url = "{{ route('booking.store') }}";
+                    selectedSeats.forEach(seatId => {
+                        $(`.seat[data-seat-id='${seatId}']`).addClass('bg-danger text-white selected');
+                    });
+                    $('#ticket-movie-title').text(`{{ $data[0]->title }}`);
+                    $('#ticket-showtime').text(`{{ $data[0]->showtime }}`);
+                    $('#ticket-selected-seats').text(selectedSeats.join(', '));
+                    $('#ticket-total-cost').text('₹' + totalPrice.toFixed(2));
+                    $('#selected-seats').text(0);
+                    $('#total-price').text('₹0.00');
+                    $('#ticketModal').modal('show');
+
+            // Mark booking as confirmed
+                    isBookingConfirmed = true;
+
                     $.ajax({
                         type: "POST",
                         url: url,
@@ -109,27 +129,34 @@
                         dataType: "json",
                         success: function(response) {
                             if (response.message === 'success') {
-                                $booked = response.seats;
-                                $booked.forEach(seatId => {
-                                    $(`.seat[data-seat-id='${seatId}']`).addClass(
-                                        'bg-danger text-white selected');
-                                });
-                                $('#ticket-movie-title').text(`{{ $data[0]->title }}`);
-                                $('#ticket-showtime').text(`{{ $data[0]->showtime }}`);
-                                $('#ticket-selected-seats').text(response.seatNo.join(', '));
-                                $('#ticket-total-cost').text('₹' + totalPrice.toFixed(2));
-                                $('#selected-seats').text(0);
-                                $('#total-price').text('₹' + 0.00);
-                                // console.log(response.qr_code);
-                                // $('#ticket-qr-code').html(response.qr_code);
-                                $('#ticketModal').modal('show');
+                                // $booked = response.seats;
+                                // // $booked.forEach(seatId => {
+                                // //     $(`.seat[data-seat-id='${seatId}']`).addClass(
+                                // //         'bg-danger text-white selected');
+                                // // });
+                                // $('#ticket-movie-title').text(`{{ $data[0]->title }}`);
+                                // $('#ticket-showtime').text(`{{ $data[0]->showtime }}`);
+                                // $('#ticket-selected-seats').text(response.seatNo.join(', '));
+                                // $('#ticket-total-cost').text('₹' + totalPrice.toFixed(2));
+                                // $('#selected-seats').text(0);
+                                // $('#total-price').text('₹' + 0.00);
+                                // // console.log(response.qr_code);
+                                // // $('#ticket-qr-code').html(response.qr_code);
+                                // $('#ticketModal').modal('show');
                             }
+                        },
+                        error:function(){
+                            alert('booking failed. Please try again. ');
+                            isBookingConfirmed=false;
                         }
 
                     });
                 } else {
                     alert('Please select at least one seat to book.');
                 }
+            });
+            $('#ticketModal').on('hidden.bs.modal', function() {
+                window.location.href = "{{ route('user.dashboard') }}"; // Redirect after modal closes
             });
             $('#print-ticket').on('click', function() {
                 const ticketContent = `

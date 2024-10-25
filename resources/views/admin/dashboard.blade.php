@@ -1,13 +1,28 @@
 @extends('layouts.adminLayout')
 @include('admin.subview.updateModal')
 @section('title')
-    dashboard
+    Movies
 @endsection
-@section('content')
-    <div class="container-fluid mt-4">
-        <div class="d-flex justify-content-between align-items-center mb-3">
 
+@section('content')
+    <div class="container-fluid">
+        <div class="d-flex justify-content-between align-items-center mb-3">
             <a href="{{ route('movies.create') }}" class="btn btn-primary">Add New Movie</a>
+            <!-- SidebarSearch Form -->
+            <div class="form-inline position-relative">
+                <form id="searchForm" onsubmit="return false;">
+                    <div class="input-group">
+                            <input class="form-control form-control-sidebar" type="search" name="search" placeholder="Search" aria-label="Search" value="{{ request()->get('search') }}" id="searchInput">
+                        <div class="input-group-append">
+                            <button type="button" class="button btn-primary" id="searchButton">
+                                <i class="fas fa-search fa-fw"></i>
+                            </button>
+                        </div>
+                    </div>
+                </form>
+                <div class="suggestions-list" id="suggestions" style="display: none"></div>
+            </div>
+
         </div>
 
         @if (session('success'))
@@ -62,8 +77,11 @@
                         <td><img src="{{ asset($movie->image_url) }}"
                                 style="max-width: 100px; max-height: 100px; object-fit: cover;"></td>
                         <td class="d-flex flex-column ">
-                            <button class="btn btn-warning btn-sm mb-2 ed-movie" data-csrf="{{csrf_token()}}" data-id="{{$movie->id}}" data-bs-toggle="modal" data-bs-target="#editMovieModal">Edit</button>
-                            <button class="btn btn-danger btn-sm del-movie" data-csrf="{{csrf_token()}}" data-id="{{$movie->id}}">Delete</button>
+                            <button class="btn btn-warning btn-sm mb-2 ed-movie" data-csrf="{{ csrf_token() }}"
+                                data-id="{{ $movie->id }}" data-bs-toggle="modal"
+                                data-bs-target="#editMovieModal">Edit</button>
+                            <button class="btn btn-danger btn-sm del-movie" data-csrf="{{ csrf_token() }}"
+                                data-id="{{ $movie->id }}">Delete</button>
                             {{-- <form action="{{ route('movies.destroy', $movie->id) }}" method="POST"
                                 style="display:inline;">
                                 @csrf
@@ -82,12 +100,12 @@
     </div>
 
 @endsection
-@section('title')
-    Admin Dashboard - Movies
-@endsection
-@section('bread')
-    dashboard
-@endsection
-@section('status1')
+
+
+@section('status4')
     active
 @endsection
+@section('status3')
+    ""
+@endsection
+

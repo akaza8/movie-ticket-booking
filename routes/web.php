@@ -32,6 +32,10 @@ Route::group(['auth','middleware' => 'prevent-back-history'],function(){
 Route::prefix('admin')->middleware(['roleManager:admin'])->group(function(): void{
     Route::resource('/movies', AdminController::class);
     Route::post('/upload/{id}',[AdminController::class,'update']);
+    // search
+    Route::get('/admin/movies/suggest',[AdminController::class, 'suggest'])->name('movies.suggest');
+    //getSearchedPage
+    Route::get('/movies/{id}/page',[AdminController::class, 'getMoviePage'])->name('movie.page');
 });
 
 
