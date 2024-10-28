@@ -23,8 +23,21 @@ class AdminService{
 
     }
 
-    public function getPagination(int $val):Paginator{
-        return Movie::paginate($val);
+    public function getPagination(int $val, Request $request): Paginator
+    {
+        $query = Movie::query();
+
+        if ($request->has('search') && !empty($request->search)) {
+            $query->where('title', 'LIKE', "%{$request->search}%")
+                ->orWhere('showtime', 'LIKE', "%{$request->search}%")
+                ->orWhere('cast', 'LIKE', "%{$request->search}%");
+        }
+
+        if ($request->has('from_date') && $request->has('to_date')) {
+            $query->whereBetween('showtime', [$request->from_date, $request->to_date]);
+        }
+
+        return $query->paginate($val);
     }
 
 
@@ -82,17 +95,17 @@ class AdminService{
         return response()->json($movies);
     }
 
-    public function getPageNumber(Movie $movie):JsonResponse{
-        if(!$movie){
-            return response()->json(['error'=>'movie not found'],404);
-        }
-        $movies=Movie::orderBy('id')->get();
-        $index = $movies->search(function ($item) use ($movie) {
-            return $item->id === $movie->id;
-        });
-        $itemsPerPage=4;
-        $pageNumber=(int)(ceil(($index+1)/$itemsPerPage));
-        return response()->json(['page'=>$pageNumber]);
-    }
+    // public function getPageNumber(Movie $movie):JsonResponse{
+    //     if(!$movie){
+    //         return response()->json(['error'=>'movie not found'],404);
+    //     }
+    //     $movies=Movie::orderBy('id')->get();
+    //     $index = $movies->search(function ($item) use ($movie) {
+    //         return $item->id === $movie->id;
+    //     });
+    //     $itemsPerPage=4;
+    //     $pageNumber=(int)(ceil(($index+1)/$itemsPerPage));
+    //     return response()->json(['page'=>$pageNumber]);
+    // }
 }
 

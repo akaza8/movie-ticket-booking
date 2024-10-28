@@ -19,10 +19,9 @@ class AdminController extends Controller
     public function __construct(AdminService $AdminService){
         $this->AdminService = $AdminService;
     }
-    public function index()
+    public function index(Request $request): View
     {
-        // $movies= $this->AdminService->getMovies();
-        $movies=$this->AdminService->getPagination(4);
+        $movies=$this->AdminService->getPagination(4,$request);
         return view('admin.dashboard',compact('movies'));
     }
 
@@ -98,15 +97,15 @@ class AdminController extends Controller
             return response()->json(['status' => 'error', 'message' => 'Movie not found or could not be deleted.'], 404);
         }
     }
-    public function suggest(Request $request):JsonResponse{
-        $movies=$this->AdminService->getMovie($request);
-        return $movies;
-    }
-    public function getMoviePage(Request $request, int $id):JsonResponse{
-        $movie=Movie::find($id);
-        $response=$this->AdminService->getPageNumber($movie);
-        return $response;
-    }
+    // public function suggest(Request $request):JsonResponse{
+    //     $movies=$this->AdminService->getMovie($request);
+    //     return $movies;
+    // }
+    // public function getMoviePage(Request $request, int $id):JsonResponse{
+    //     $movie=Movie::find($id);
+    //     $response=$this->AdminService->getPageNumber($movie);
+    //     return $response;
+    // }
 }
 
 

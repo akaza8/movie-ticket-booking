@@ -289,84 +289,98 @@ $(document).ready(function() {
 });
 
 
+// adminSearch2.0
+// $(document).ready(function(){
+//     const searchButton = $('#searchButton');
+//     const searchInput = $('#searchInput');
+//     const fromDate = $("#fromDate");
+//     const toDate = $("#toDate");
+//     searchButton.on('click',function(){
+//         const query = searchInput.val();
+//         if(query.length>2){
+//             $.ajax({
 
+//             });
+//         }
+//     });
+// });
 // admin search
-document.addEventListener('DOMContentLoaded',function(){
-    const searchButton = document.getElementById('searchButton');
-    const searchInput = document.getElementById('searchInput');
-    const suggestionContainer = document.getElementById('suggestions');
-    searchButton.addEventListener('click',function(){
-        const query = searchInput.value;
-        if(query.length>2){
-            fetch(`admin/movies/suggest?query=${encodeURIComponent(query)}`)
-            .then(response => {
-                return response.json();
-            })
-            .then(data =>{
-                suggestionContainer.innerHTML='';
-                if(data.length>0){
-                    data.forEach(movie => {
-                        const div=document.createElement('div');
-                        div.textContent=movie.title;
-                        div.onclick=function(){
-                            $.ajax({
-                                url:`movies/${movie.id}/page`,
-                                method:'GET',
-                                dataType: 'json',
-                                success: function(data){
-                                    if(data.page){
-                                        window.location.href=`movies?page=${data.page}&highlight=${movie.id}`;
-                                    }
-                                    // highlightMovie(movie.id);
-                                },
-                                error:function(error){
-                                    console.error(error);
-                                }
-                            });
-                            suggestionContainer.style.display = 'none';
-                        }
-                        suggestionContainer.appendChild(div);
-                    });
-                    suggestionContainer.style.display='block';
-                } else{
-                    suggestionContainer.style.display= 'none';
-                    alert('no movie found. ')
-                }
-            })
-            .catch(error => console.error('Error:', error));
-        }else{
-            suggestionContainer.style.display='none';
-        }
+// document.addEventListener('DOMContentLoaded',function(){
+//     const searchButton = document.getElementById('searchButton');
+//     const searchInput = document.getElementById('searchInput');
+//     const suggestionContainer = document.getElementById('suggestions');
+//     searchButton.addEventListener('click',function(){
+//         const query = searchInput.value;
+//         if(query.length>2){
+//             fetch(`admin/movies/suggest?query=${encodeURIComponent(query)}`)
+//             .then(response => {
+//                 return response.json();
+//             })
+//             .then(data =>{
+//                 suggestionContainer.innerHTML='';
+//                 if(data.length>0){
+//                     data.forEach(movie => {
+//                         const div=document.createElement('div');
+//                         div.textContent=movie.title;
+//                         div.onclick=function(){
+//                             $.ajax({
+//                                 url:`movies/${movie.id}/page`,
+//                                 method:'GET',
+//                                 dataType: 'json',
+//                                 success: function(data){
+//                                     if(data.page){
+//                                         window.location.href=`movies?page=${data.page}&highlight=${movie.id}`;
+//                                     }
+//                                     // highlightMovie(movie.id);
+//                                 },
+//                                 error:function(error){
+//                                     console.error(error);
+//                                 }
+//                             });
+//                             suggestionContainer.style.display = 'none';
+//                         }
+//                         suggestionContainer.appendChild(div);
+//                     });
+//                     suggestionContainer.style.display='block';
+//                 } else{
+//                     suggestionContainer.style.display= 'none';
+//                     alert('no movie found. ')
+//                 }
+//             })
+//             .catch(error => console.error('Error:', error));
+//         }else{
+//             suggestionContainer.style.display='none';
+//         }
 
-    });
-    function highlightMovie(movieId) {
-        const rows = document.querySelectorAll('table tbody tr');
-        let found = false;
+//     });
+//     function highlightMovie(movieId) {
+//         const rows = document.querySelectorAll('table tbody tr');
+//         let found = false;
 
-        rows.forEach(row => {
-            const rowId = row.cells[0].textContent; // Assuming ID is in the first cell
-            if (rowId == movieId) {
-                row.classList.add('highlight'); // Add your highlight class
-                row.scrollIntoView({ behavior: 'smooth', block: 'center' }); // Scroll to the row
-                found = true;
-            } else {
-                row.classList.remove('highlight'); // Remove highlight from other rows
-            }
-        });
+//         rows.forEach(row => {
+//             const rowId = row.cells[0].textContent; // Assuming ID is in the first cell
+//             if (rowId == movieId) {
+//                 row.classList.add('highlight'); // Add your highlight class
+//                 row.scrollIntoView({ behavior: 'smooth', block: 'center' }); // Scroll to the row
+//                 found = true;
+//             } else {
+//                 row.classList.remove('highlight'); // Remove highlight from other rows
+//             }
+//         });
 
-        if (!found) {
-            alert('Movie not found.'); // Optional: Alert if not found
-        }
-    }
-    // Hide suggestions on click outside
-    document.addEventListener('click', function(e) {
-        if (!suggestionContainer.contains(e.target) && e.target !== searchInput) {
-            suggestionContainer.style.display = 'none';
-        }
-    });
-    const urlParams = new URLSearchParams(window.location.search);
-    const highlightId = urlParams.get('highlight');
-    if (highlightId) {
-        highlightMovie(highlightId);
-    }
-});
+//         if (!found) {
+//             alert('Movie not found.'); // Optional: Alert if not found
+//         }
+//     }
+//     // Hide suggestions on click outside
+//     document.addEventListener('click', function(e) {
+//         if (!suggestionContainer.contains(e.target) && e.target !== searchInput) {
+//             suggestionContainer.style.display = 'none';
+//         }
+//     });
+//     const urlParams = new URLSearchParams(window.location.search);
+//     const highlightId = urlParams.get('highlight');
+//     if (highlightId) {
+//         highlightMovie(highlightId);
+//     }
+// });

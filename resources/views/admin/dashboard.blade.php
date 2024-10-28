@@ -7,22 +7,26 @@
 @section('content')
     <div class="container-fluid">
         <div class="d-flex justify-content-between align-items-center mb-3">
-            <a href="{{ route('movies.create') }}" class="btn btn-primary">Add New Movie</a>
             <!-- SidebarSearch Form -->
             <div class="form-inline position-relative">
-                <form id="searchForm" onsubmit="return false;">
+                <form id="searchForm" action="{{route('movies.index')}}">
                     <div class="input-group">
-                            <input class="form-control form-control-sidebar" type="search" name="search" placeholder="Search" aria-label="Search" value="{{ request()->get('search') }}" id="searchInput">
-                        <div class="input-group-append">
-                            <button type="button" class="button btn-primary" id="searchButton">
-                                <i class="fas fa-search fa-fw"></i>
+                        <input class="form-control mx-2" type="date" name="from_date" value="{{ request()->get('from_date') }}" id="fromDate">
+                        <input class="form-control mx-2" type="date" name="to_date" value="{{ request()->get('to_date') }}" id="toDate">
+                        <input class="form-control mx-2" type="search" name="search" placeholder="Search" aria-label="Search" value="{{ request()->get('search') }}" id="searchInput">
+                        <div class="input-group-append mx-2">
+                            <button type="submit" class="btn btn-primary rounded-pill px-2" id="searchButton">
+                                <i class="fas fa-search fa-fw mr-1"></i>
+                            </button>
+                            <button type="button" class="btn btn-secondary rounded-pill ml-2 px-2 " id="resetButton" onclick="window.location.href=window.location.pathname">
+                                <i class="fas fa-sync fa-fw mr-1"></i>
                             </button>
                         </div>
                     </div>
                 </form>
-                <div class="suggestions-list" id="suggestions" style="display: none"></div>
+                {{-- <div class="suggestions-list" id="suggestions" style="display: none"></div> --}}
             </div>
-
+            <a href="{{ route('movies.create') }}" class="btn btn-primary">Add New Movie</a>
         </div>
 
         @if (session('success'))
